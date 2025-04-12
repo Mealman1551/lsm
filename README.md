@@ -51,13 +51,16 @@ Make sure to run the script with root privileges (for example via `sudo`) as it 
 After running the script, you will be presented with the following menu:
 
 ```
-=== Mealman1551's LSM ===
-1) Install Apache (and default page)
-2) Create a new virtual host
-3) Deploy file or directory to site
-4) Fix file permissions for site
-5) List active LSM sites
-q) Quit
+=== Mealman1551's LSM ==="
+1) Install Apache (and default page)"
+2) Create a new virtual host"
+3) Deploy file or directory to site"
+4) Fix file permissions for site"
+5) List active LSM sites"
+6) Delete a site"
+7) Set which site is shown on http://localhost"
+q) Quit" 
+
 ```
 
 ---
@@ -133,7 +136,7 @@ Enable directory indexing? (y/n): y
 Enable PHP? (y/n): y
 Created by Mealman1551's LSM
 Site: mysite
-Created: Sat, 10 Apr 2025 12:34:56
+Created: Sat, 12 Apr 2025 12:34:56
 Root: /var/www/mysite
 PHP: yes
 Indexing: yes
