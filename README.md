@@ -171,4 +171,10 @@ If you have any questions, feel free to open an issue in the GitHub repository.
 
 ---
 
+## Please note
+
+Please check the lsm.sh.digest file to check the integrity of the script.
+
+---
+
 ##### &copy; 2025 Mealman1551
