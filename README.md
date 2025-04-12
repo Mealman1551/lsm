@@ -28,15 +28,18 @@
 ## Installation
 
 ### 1. Clone the repository
-
 ```bash
 git clone https://github.com/mealman1551/lsm.git
+```
+### 2. Cd the dir
+```bash
 cd lsm
+```
+### 3. Make the script executable
+```bash
 chmod +x lsm.sh
 ```
-
-### 2. Run the script
-
+### 4. Run the script
 ```bash
 sudo ./lsm.sh
 ```
