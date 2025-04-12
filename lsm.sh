@@ -23,8 +23,8 @@ create_virtual_host() {
     read enable_php
 
     site_dir="/var/www/$site_name"
-    sudo mkdir -p $site_dir
-    sudo chown -R $USER:$USER $site_dir
+    sudo mkdir -p "$site_dir"
+    sudo chown -R $USER:$USER "$site_dir"
 
     if [ "$enable_php" == "y" ]; then
         sudo apt install -y php libapache2-mod-php
@@ -39,22 +39,26 @@ create_virtual_host() {
         index_status="no"
     fi
 
-    echo "<!DOCTYPE html><html><head><title>$site_name</title></head><body><h1>Welcome to $site_name</h1><h2>Powered by Mealman1551's LSM</h2></body></html>" | sudo tee $site_dir/index.html > /dev/null
+    echo "<!DOCTYPE html><html><head><title>$site_name</title></head><body><h1>Welcome to $site_name</h1><h2>Powered by Mealman1551's LSM</h2></body></html>" | sudo tee "$site_dir/index.html" > /dev/null
 
     echo "Site $site_name created at $site_dir"
-    echo "PHP: $php_status, Indexing: $index_status" | sudo tee $site_dir/lsm-info.txt > /dev/null
+    echo "PHP: $php_status, Indexing: $index_status" | sudo tee "$site_dir/lsm-info.txt" > /dev/null
 
-    sudo bash -c "echo '<VirtualHost *:80>
+    sudo bash -c "cat > /etc/apache2/sites-available/$site_name.conf <<EOF
+<VirtualHost *:80>
     DocumentRoot $site_dir
     ServerName $site_name.local
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>' > /etc/apache2/sites-available/$site_name.conf"
+    ErrorLog \${APACHE_LOG_DIR}/error.log
+    CustomLog \${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+EOF"
 
-    sudo a2ensite $site_name.conf
+    sudo a2ensite "$site_name.conf"
     sudo systemctl reload apache2
 
-    echo "Virtual host for $site_name created and enabled."
+    echo "127.0.0.1 $site_name.local" | sudo tee -a /etc/hosts > /dev/null
+
+    echo "Virtual host for $site_name created, enabled, and added to /etc/hosts."
     read -p "Press any key to return to the main menu..."
 }
 
@@ -69,8 +73,8 @@ deploy_file_or_directory() {
         return
     fi
 
-    sudo cp -r $deploy_path /var/www/$site_name/
-    sudo chown -R $USER:$USER /var/www/$site_name/
+    sudo cp -r "$deploy_path" "/var/www/$site_name/"
+    sudo chown -R $USER:$USER "/var/www/$site_name/"
     echo "Deployed files to /var/www/$site_name"
     read -p "Press any key to return to the main menu..."
 }
@@ -84,8 +88,8 @@ fix_permissions() {
         return
     fi
 
-    sudo chown -R $USER:$USER /var/www/$site_name/
-    sudo chmod -R 755 /var/www/$site_name/
+    sudo chown -R $USER:$USER "/var/www/$site_name/"
+    sudo chmod -R 755 "/var/www/$site_name/"
     echo "Permissions fixed for $site_name"
     read -p "Press any key to return to the main menu..."
 }
@@ -100,6 +104,44 @@ list_active_sites() {
     read -p "Press any key to return to the main menu..."
 }
 
+delete_site() {
+    echo "Enter site name to delete:"
+    read site_name
+
+    site_dir="/var/www/$site_name"
+    site_conf="/etc/apache2/sites-available/$site_name.conf"
+
+    if [ ! -d "$site_dir" ]; then
+        echo "Site does not exist."
+        return
+    fi
+
+    sudo rm -rf "$site_dir"
+    sudo a2dissite "$site_name.conf"
+    sudo rm -f "$site_conf"
+    sudo sed -i "/$site_name.local/d" /etc/hosts
+    sudo systemctl reload apache2
+
+    echo "Site $site_name deleted and cleaned up."
+    read -p "Press any key to return to the main menu..."
+}
+
+set_default_site() {
+    echo "Available sites:"
+    select site_name in $(ls /var/www); do
+        if [ -d "/var/www/$site_name" ]; then
+            sudo rm -f /var/www/html
+            sudo ln -s "/var/www/$site_name" /var/www/html
+            echo "Set $site_name as default site on localhost (http://localhost)"
+            break
+        else
+            echo "Invalid selection."
+        fi
+    done
+    sudo systemctl reload apache2
+    read -p "Press any key to return to the main menu..."
+}
+
 while true; do
     echo "=== Mealman1551's LSM ==="
     echo "1) Install Apache (and default page)"
@@ -107,32 +149,21 @@ while true; do
     echo "3) Deploy file or directory to site"
     echo "4) Fix file permissions for site"
     echo "5) List active LSM sites"
+    echo "6) Delete a site"
+    echo "7) Set which site is shown on http://localhost"
     echo "q) Quit"
     read -p "Select an option: " option
 
     case $option in
-        1)
-            install_apache
-            ;;
-        2)
-            create_virtual_host
-            ;;
-        3)
-            deploy_file_or_directory
-            ;;
-        4)
-            fix_permissions
-            ;;
-        5)
-            list_active_sites
-            ;;
-        q)
-            echo "Goodbye!"
-            break
-            ;;
-        *)
-            echo "Invalid option, please try again."
-            ;;
+        1) install_apache ;;
+        2) create_virtual_host ;;
+        3) deploy_file_or_directory ;;
+        4) fix_permissions ;;
+        5) list_active_sites ;;
+        6) delete_site ;;
+        7) set_default_site ;;
+        q) echo "Goodbye!"; break ;;
+        *) echo "Invalid option, please try again." ;;
     esac
 done
 
