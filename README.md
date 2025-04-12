@@ -6,7 +6,7 @@
 [![Issues](https://img.shields.io/github/issues/mealman1551/lsm)](https://github.com/mealman1551/lsm/issues)
 [![Release](https://img.shields.io/github/v/release/mealman1551/lsm?include_prereleases)](https://github.com/mealman1551/lsm/releases)
 
-**LSM (Local Server Manager)** is an automated, interactive tool for managing an Apache web server on Linux. With just a few keystrokes, you can create websites, deploy files, and manage permissions as if it were magic.
+**LSM (Local Server Manager)** is an automated, interactive tool for managing an Apache web server on Linux (Requires APT package manager (e.g. Debian, Ubuntu, Mint)). With just a few keystrokes, you can create websites, deploy files, and manage permissions as if it were magic.
 
 ---
 
