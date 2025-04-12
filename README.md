@@ -321,7 +321,7 @@ Deployed to /var/www/mysite/
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+This project is licensed under the GNU GPL v3 License. See the [LICENSE](LICENSE) file for more details.
 
 ---
 
@@ -336,8 +336,4 @@ If you have suggestions or improvements, feel free to open an issue or submit a 
 If you have any questions, feel free to open an issue in the GitHub repository.
 
 ---
-
-## Stars
-
-If you find this project useful, please consider giving it a star on GitHub.
-```
+##### &copy; 2025 Mealman1551
