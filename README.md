@@ -1,16 +1,3 @@
-```markdown
-# LSM – Local Server Manager (by Mealman1551)
-
-[![License](https://img.shields.io/github/license/mealman1551/lsm)](LICENSE)
-[![GitHub Repo stars](https://img.shields.io/github/stars/mealman1551/lsm?style=social)](https://github.com/mealman1551/lsm/stargazers)
-[![Code Size](https://img.shields.io/github/languages/code-size/mealman1551/lsm)](https://github.com/mealman1551/lsm)
-[![Issues](https://img.shields.io/github/issues/mealman1551/lsm)](https://github.com/mealman1551/lsm/issues)
-[![Release](https://img.shields.io/github/v/release/mealman1551/lsm?include_prereleases)](https://github.com/mealman1551/lsm/releases)
-
-**LSM (Local Server Manager)** is an automated, interactive tool for managing an Apache web server on Linux. With just a few keystrokes, you can create websites, deploy files, and manage permissions as if it were magic.  
-
-> Written in pure Bash with no external dependencies other than Apache (and optionally PHP).
-```markdown
 # LSM – Local Server Manager (by Mealman1551)
 
 [![License](https://img.shields.io/github/license/mealman1551/lsm)](LICENSE)
