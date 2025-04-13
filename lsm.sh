@@ -23,8 +23,8 @@ create_virtual_host() {
     read enable_php
 
     site_dir="/var/www/$site_name"
-    sudo mkdir -p $site_dir
-    sudo chown -R $USER:$USER $site_dir
+    sudo mkdir -p "$site_dir"
+    sudo chown -R "$USER:$USER" "$site_dir"
 
     if [ "$enable_php" == "y" ]; then
         sudo apt install -y php libapache2-mod-php
@@ -39,19 +39,19 @@ create_virtual_host() {
         index_status="no"
     fi
 
-    echo "<!DOCTYPE html><html><head><title>$site_name</title></head><body><h1>Welcome to $site_name</h1><h2>Powered by Mealman1551's LSM</h2></body></html>" | sudo tee $site_dir/index.html > /dev/null
+    echo "<!DOCTYPE html><html><head><title>$site_name</title></head><body><h1>Welcome to $site_name</h1><h2>Powered by Mealman1551's LSM</h2></body></html>" | sudo tee "$site_dir/index.html" > /dev/null
 
     echo "Site $site_name created at $site_dir"
-    echo "PHP: $php_status, Indexing: $index_status" | sudo tee $site_dir/lsm-info.txt > /dev/null
+    echo "PHP: $php_status, Indexing: $index_status" | sudo tee "$site_dir/lsm-info.txt" > /dev/null
 
     sudo bash -c "echo '<VirtualHost *:80>
     DocumentRoot $site_dir
     ServerName $site_name.local
-    ErrorLog \${APACHE_LOG_DIR}/error.log
-    CustomLog \${APACHE_LOG_DIR}/access.log combined
+    ErrorLog \\${APACHE_LOG_DIR}/error.log
+    CustomLog \\${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>' > /etc/apache2/sites-available/$site_name.conf"
 
-    sudo a2ensite $site_name.conf
+    sudo a2ensite "$site_name.conf"
     sudo systemctl reload apache2
 
     echo "Virtual host for $site_name created and enabled."
@@ -63,6 +63,9 @@ deploy_file_or_directory() {
     read site_name
     echo "Enter path to file or folder to deploy:"
     read -e deploy_path
+
+    # Strip single or double quotes if present
+    deploy_path=$(eval echo $deploy_path)
 
     if [ ! -d "/var/www/$site_name" ]; then
         echo "Site does not exist."
@@ -82,7 +85,7 @@ deploy_file_or_directory() {
         return
     fi
 
-    sudo chown -R $USER:$USER "/var/www/$site_name/"
+    sudo chown -R "$USER:$USER" "/var/www/$site_name/"
     echo "Deployed to /var/www/$site_name"
     read -p "Press any key to return to the main menu..."
 }
@@ -96,7 +99,7 @@ fix_permissions() {
         return
     fi
 
-    sudo chown -R $USER:$USER "/var/www/$site_name/"
+    sudo chown -R "$USER:$USER" "/var/www/$site_name/"
     sudo chmod -R 755 "/var/www/$site_name/"
     echo "Permissions fixed for $site_name"
     read -p "Press any key to return to the main menu..."
@@ -106,7 +109,7 @@ list_active_sites() {
     echo "Active LSM sites:"
     for site in /var/www/*; do
         if [ -d "$site" ]; then
-            echo "$(basename $site)"
+            echo "$(basename "$site")"
         fi
     done
     read -p "Press any key to return to the main menu..."
@@ -135,7 +138,7 @@ set_default_site() {
     echo "Available sites:"
     for site in /var/www/*; do
         if [ -d "$site" ]; then
-            echo "- $(basename $site)"
+            echo "- $(basename "$site")"
         fi
     done
     echo "Enter the site you want to set as default for localhost:"
