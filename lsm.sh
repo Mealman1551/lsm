@@ -62,24 +62,28 @@ deploy_file_or_directory() {
     echo "Enter site name:"
     read site_name
     echo "Enter path to file or folder to deploy:"
-    read deploy_path
+    read -e deploy_path
 
     if [ ! -d "/var/www/$site_name" ]; then
         echo "Site does not exist."
+        read -p "Press any key to return to the main menu..."
         return
     fi
 
     if [ -d "$deploy_path" ]; then
-        sudo cp -r "$deploy_path"/* "/var/www/$site_name/"
+        echo "Copying contents of directory..."
+        sudo cp -a "$deploy_path"/. "/var/www/$site_name/"
     elif [ -f "$deploy_path" ]; then
+        echo "Copying single file..."
         sudo cp "$deploy_path" "/var/www/$site_name/"
     else
-        echo "File or folder does not exist."
+        echo "File or folder does not exist: $deploy_path"
+        read -p "Press any key to return to the main menu..."
         return
     fi
 
     sudo chown -R $USER:$USER "/var/www/$site_name/"
-    echo "Deployed files to /var/www/$site_name"
+    echo "Deployed to /var/www/$site_name"
     read -p "Press any key to return to the main menu..."
 }
 
